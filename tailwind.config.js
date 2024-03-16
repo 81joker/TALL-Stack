@@ -1,6 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
-const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -18,14 +17,7 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
-             colors: {
-                primary: colors.indigo,
-                secondary: colors.gray,
-                positive: colors.emerald,
-                negative: colors.rose,
-                warning: colors.amber,
-                info: colors.blue
-            },
+
         },
     },
         presets: [
