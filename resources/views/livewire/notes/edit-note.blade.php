@@ -4,16 +4,41 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 use App\Models\Note;
 
-new #[Layout('layouts.app')] class  extends Component{ 
-// / new class extends Component {
- public Note $note;
-
- public function mount(Note $note){
-    $this->authorize('update', $note);
-    $this->fill($note);
- }
-
-
+new #[Layout('layouts.app')] class extends Component {
+    // / new class extends Component {
+    public Note $note;
+    public $noteTitle;
+    public $noteBody;
+    public $noteRecipient;
+    public $noteSendDate;
+    public $noteIsPublished;
+    public function mount(Note $note)
+    {
+        $this->authorize('update', $note);
+        $this->fill($note);
+        $this->noteTitle = $note->title;
+        $this->noteBody = $note->body;
+        $this->noteRecipient = $note->recipient;
+        $this->noteSendDate = $note->send_date;
+        $this->noteIsPublished = $note->is_published;
+    }
+    public function saveNote()
+    {
+        $validated = $this->validate([
+            'noteTitle' => ['required', 'string', 'min:5'],
+            'noteBody' => ['required', 'string', 'min:20'],
+            'noteRecipient' => ['required', 'email'],
+            'noteSendDate' => ['required', 'date'],
+        ]);
+        $this->note->update([
+            'title' => $this->noteTitle,
+            'body' => $this->noteBody,
+            'recipient' => $this->noteRecipient,
+            'send_date' => $this->noteSendDate,
+            'is_published' => $this->noteIsPublished,
+        ]);
+        $this->dispatch('note-updated');
+    }
 }; ?>
 
 <div>
@@ -31,7 +56,7 @@ new #[Layout('layouts.app')] class  extends Component{
                     <x-button type="submit" secondary spinner="saveNote">Save Note</x-button>
                     <x-button href="{{ route('notes.index') }}" flat negative>Back to Notes</x-button>
                 </div>
-                <x-action-message on="note-saved" />
+                <x-action-message-updated updated="note-updated" />
                 <x-errors />
             </form>
         </div>
